@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
   Box,
   VStack,
@@ -50,8 +50,10 @@ interface RichTextEditorProps {
 
 const RichTextEditor: React.FC<RichTextEditorProps> = ({ value, onChange }) => {
   const [content, setContent] = useState<string>(value || '');
-  const [editorRef, setEditorRef] = useState<HTMLDivElement | null>(null);
-  // Mock data to replace the Redux state
+  const [isEmpty, setIsEmpty] = useState<boolean>(!content);
+  const [isFocused, setIsFocused] = useState<boolean>(false);
+  const editorRef = useRef<HTMLDivElement | null>(null);
+  
   const [users, setUsers] = useState<User[]>([
     { 
       id: '1', 
@@ -80,19 +82,19 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({ value, onChange }) => {
   });
   
   useEffect(() => {
-    // Update parent component's state when content changes
+    
     onChange(content);
+    setIsEmpty(content === '');
   }, [content, onChange]);
   
   useEffect(() => {
-    // Load saved content from localStorage if it exists
     const savedContent = localStorage.getItem('richTextContent');
     if (savedContent) {
       setContent(savedContent);
+      setIsEmpty(savedContent === '');
       onChange(savedContent);
     }
-    
-    // If we have a currentUser, populate the editor with their details
+
     if (currentUser) {
       const userContent = `
         <h1>User Profile</h1>
@@ -104,22 +106,28 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({ value, onChange }) => {
         <p><strong>Created:</strong> ${new Date(currentUser.createdAt).toLocaleString()}</p>
       `;
       setContent(userContent);
+      setIsEmpty(false);
       onChange(userContent);
     }
   }, [currentUser, onChange]);
   
+  useEffect(() => {
+    if (editorRef.current && editorRef.current.innerHTML !== content) {
+      editorRef.current.innerHTML = content;
+    }
+  }, [content]);
+  
   const executeCommand = (command: EditorCommand) => {
-    if (!editorRef) return;
+    if (!editorRef.current) return;
     
-    // Focus the editor
-    editorRef.focus();
+
+    editorRef.current.focus();
     
-    // Execute the command
     document.execCommand(command.command, false, command.value);
     
-    // Force update of content state to reflect changes
-    setContent(editorRef.innerHTML);
-    onChange(editorRef.innerHTML);
+    setContent(editorRef.current.innerHTML);
+    setIsEmpty(editorRef.current.innerHTML === '');
+    onChange(editorRef.current.innerHTML);
   };
   
   const handleUserSelect = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -138,6 +146,7 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({ value, onChange }) => {
         <p><strong>Created:</strong> ${new Date(selectedUser.createdAt).toLocaleString()}</p>
       `;
       setContent(userContent);
+      setIsEmpty(false);
       onChange(userContent);
     }
   };
@@ -154,9 +163,16 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({ value, onChange }) => {
     });
   };
   
+  const handleEditorChange = (e: React.FormEvent<HTMLDivElement>) => {
+    const newContent = (e.target as HTMLDivElement).innerHTML;
+    setContent(newContent);
+    setIsEmpty(newContent === '');
+    onChange(newContent);
+  };
+  
   return (
-    <AnimatedBox style={fadeIn} w="full" maxW="4xl" mx="auto" mt={8}>
-      <Box className="glass" p={6} borderRadius="xl" boxShadow="2xl">
+    <AnimatedBox style={fadeIn} maxW="4xl" mx="auto" mt={8}>
+      <Box className="glass" p={10} sx={{borderRadius:"10px", maxWidth:"100%"}} boxShadow="2xl">
         <VStack spacing={5} align="stretch">
           <HStack justify="space-between">
             <Heading as="h2" className="gradient-text">
@@ -195,7 +211,7 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({ value, onChange }) => {
             <Tooltip label="Bold">
               <IconButton
                 aria-label="Bold"
-                icon={<FaBold />}
+                icon={<FaBold style={{padding:"1px"}}/>}
                 onClick={() => executeCommand({ command: 'bold' })}
                 variant="ghost"
                 colorScheme="whiteAlpha"
@@ -206,7 +222,7 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({ value, onChange }) => {
             <Tooltip label="Italic">
               <IconButton
                 aria-label="Italic"
-                icon={<FaItalic />}
+                icon={<FaItalic style={{padding:"1px"}}/>}
                 onClick={() => executeCommand({ command: 'italic' })}
                 variant="ghost"
                 colorScheme="whiteAlpha"
@@ -217,7 +233,7 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({ value, onChange }) => {
             <Tooltip label="Underline">
               <IconButton
                 aria-label="Underline"
-                icon={<FaUnderline />}
+                icon={<FaUnderline style={{padding:"1px"}}/>}
                 onClick={() => executeCommand({ command: 'underline' })}
                 variant="ghost"
                 colorScheme="whiteAlpha"
@@ -230,7 +246,7 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({ value, onChange }) => {
             <Tooltip label="Heading">
               <IconButton
                 aria-label="Heading"
-                icon={<FaHeading />}
+                icon={<FaHeading style={{padding:"1px"}}/>}
                 onClick={() => executeCommand({ command: 'formatBlock', value: '<h2>' })}
                 variant="ghost"
                 colorScheme="whiteAlpha"
@@ -241,7 +257,7 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({ value, onChange }) => {
             <Tooltip label="Bulleted List">
               <IconButton
                 aria-label="Bulleted List"
-                icon={<FaListUl />}
+                icon={<FaListUl style={{padding:"1px"}}/>}
                 onClick={() => executeCommand({ command: 'insertUnorderedList' })}
                 variant="ghost"
                 colorScheme="whiteAlpha"
@@ -252,7 +268,7 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({ value, onChange }) => {
             <Tooltip label="Numbered List">
               <IconButton
                 aria-label="Numbered List"
-                icon={<FaListOl />}
+                icon={<FaListOl style={{padding:"1px"}}/>}
                 onClick={() => executeCommand({ command: 'insertOrderedList' })}
                 variant="ghost"
                 colorScheme="whiteAlpha"
@@ -263,7 +279,7 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({ value, onChange }) => {
             <Tooltip label="Quote">
               <IconButton
                 aria-label="Quote"
-                icon={<FaQuoteRight />}
+                icon={<FaQuoteRight style={{padding:"1px"}}/>}
                 onClick={() => executeCommand({ command: 'formatBlock', value: '<blockquote>' })}
                 variant="ghost"
                 colorScheme="whiteAlpha"
@@ -274,7 +290,7 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({ value, onChange }) => {
             <Tooltip label="Link">
               <IconButton
                 aria-label="Link"
-                icon={<FaLink />}
+                icon={<FaLink style={{padding:"1px"}}/>}
                 onClick={() => {
                   const url = prompt('Enter URL:');
                   if (url) executeCommand({ command: 'createLink', value: url });
@@ -290,7 +306,7 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({ value, onChange }) => {
             <Tooltip label="Undo">
               <IconButton
                 aria-label="Undo"
-                icon={<FaUndo />}
+                icon={<FaUndo style={{padding:"1px"}}/>}
                 onClick={() => executeCommand({ command: 'undo' })}
                 variant="ghost"
                 colorScheme="whiteAlpha"
@@ -301,7 +317,7 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({ value, onChange }) => {
             <Tooltip label="Redo">
               <IconButton
                 aria-label="Redo"
-                icon={<FaRedo />}
+                icon={<FaRedo style={{padding:"1px"}}/>}
                 onClick={() => executeCommand({ command: 'redo' })}
                 variant="ghost"
                 colorScheme="whiteAlpha"
@@ -312,7 +328,7 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({ value, onChange }) => {
             <Box flexGrow={1} />
             
             <Button
-              leftIcon={<FaSave />}
+              leftIcon={<FaSave style={{padding:"1px"}}/>}
               onClick={saveContent}
               size="sm"
               variant="glass"
@@ -323,38 +339,54 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({ value, onChange }) => {
           </HStack>
           
           {/* Editor Content Area */}
-          <Box
-            contentEditable
-            ref={(el) => setEditorRef(el)}
-            dangerouslySetInnerHTML={{ __html: content }}
-            onInput={(e) => {
-              const newContent = (e.target as HTMLDivElement).innerHTML;
-              setContent(newContent);
-              onChange(newContent);
-            }}
-            minH="300px"
-            p={4}
-            borderRadius="md"
-            bg="whiteAlpha.50"
-            overflowY="auto"
-            sx={{
-              '&:focus': {
-                outline: 'none',
-                boxShadow: '0 0 0 2px var(--chakra-colors-brand-300)',
-              },
-              '& h1': { fontSize: '2xl', fontWeight: 'bold', my: 2 },
-              '& h2': { fontSize: 'xl', fontWeight: 'bold', my: 2 },
-              '& p': { my: 1 },
-              '& ul, & ol': { pl: 6, my: 2 },
-              '& blockquote': { 
-                borderLeftWidth: '3px', 
-                borderLeftColor: 'brand.300', 
-                pl: 3, 
-                my: 2, 
-                fontStyle: 'italic' 
-              },
-            }}
-          />
+          <Box position="relative">
+            <Box
+              contentEditable
+              ref={editorRef}
+              onInput={handleEditorChange}
+              onFocus={() => setIsFocused(true)}
+              onBlur={() => setIsFocused(false)}
+              onClick={() => {
+                if (editorRef.current) {
+                  editorRef.current.focus();
+                }
+              }}
+              minH="300px"
+              p={4}
+              borderRadius="md"
+              bg="whiteAlpha.50"
+              overflowY="auto"
+              sx={{
+                '&:focus': {
+                  outline: 'none',
+                  boxShadow: '0 0 0 2px var(--chakra-colors-brand-300)',
+                },
+                '& h1': { fontSize: '2xl', fontWeight: 'bold', my: 2 },
+                '& h2': { fontSize: 'xl', fontWeight: 'bold', my: 2 },
+                '& p': { my: 1 },
+                '& ul, & ol': { pl: 6, my: 2 },
+                '& blockquote': { 
+                  borderLeftWidth: '3px', 
+                  borderLeftColor: 'brand.300', 
+                  pl: 3, 
+                  my: 2, 
+                  fontStyle: 'italic' 
+                },
+              }}
+            />
+            
+            {isEmpty && !isFocused && (
+              <Text
+                position="absolute"
+                top="4"
+                left="4"
+                color="gray.500"
+                pointerEvents="none"
+              >
+                Start typing here...
+              </Text>
+            )}
+          </Box>
         </VStack>
       </Box>
     </AnimatedBox>

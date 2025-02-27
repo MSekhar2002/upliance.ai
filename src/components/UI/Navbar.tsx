@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import styled from '@emotion/styled';
 import { motion } from 'framer-motion';
 import { useAuth } from '../../context/AuthContext';
@@ -190,7 +190,7 @@ const Navbar: React.FC = () => {
   const { user, logout } = useAuth();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
-
+  const navigate = useNavigate();
   useEffect(() => {
     const handleScroll = () => {
       setScrolled(window.scrollY > 10);
@@ -273,7 +273,7 @@ const Navbar: React.FC = () => {
             variant="primary"
             size="sm"
             onClick={() => {
-              // Navigate to login
+              navigate('/login');
             }}
           >
             Sign In

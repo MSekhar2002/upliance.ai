@@ -5,7 +5,6 @@ import {
   FormLabel,
   Input,
   FormErrorMessage,
-  Button,
   HStack,
   Text,
   Flex,
@@ -18,6 +17,7 @@ import { addUser, updateUser, UserData } from '../../store/userSlice';
 import { RootState } from '../../store/store';
 import useUnsavedChanges from '../../hooks/useUnsavedChanges';
 import UnsavedChangesModal from '../UI/UnsavedChangesModal';
+import Button from '../UI/Button';
 
 interface UserFormProps {
   onSuccess?: () => void;
@@ -128,7 +128,7 @@ const UserForm: React.FC<UserFormProps> = ({ onSuccess }) => {
       />
       
       <form onSubmit={handleSubmit(onSubmit)}>
-        <VStack spacing={6} align="stretch">
+        <VStack spacing={18} align="stretch">
           <Flex justify="space-between" align="center">
             <Text fontWeight="bold" fontSize="lg">
               {currentUser ? 'Edit Profile' : 'Create Profile'}
@@ -147,6 +147,7 @@ const UserForm: React.FC<UserFormProps> = ({ onSuccess }) => {
                 required: 'Name is required',
                 minLength: { value: 2, message: 'Name must be at least 2 characters' }
               })}
+              p={4}
               placeholder="John Doe"
               bg="whiteAlpha.100"
               borderColor="whiteAlpha.300"
@@ -167,6 +168,7 @@ const UserForm: React.FC<UserFormProps> = ({ onSuccess }) => {
                 },
               })}
               type="email"
+              p={4}
               placeholder="john.doe@example.com"
               bg="whiteAlpha.100"
               borderColor="whiteAlpha.300"
@@ -186,6 +188,7 @@ const UserForm: React.FC<UserFormProps> = ({ onSuccess }) => {
                   message: 'Invalid phone number',
                 },
               })}
+              p={4}
               placeholder="+1 (555) 123-4567"
               bg="whiteAlpha.100"
               borderColor="whiteAlpha.300"
@@ -202,6 +205,7 @@ const UserForm: React.FC<UserFormProps> = ({ onSuccess }) => {
                 required: 'Address is required',
                 minLength: { value: 5, message: 'Address must be at least 5 characters' },
               })}
+              p={4}
               placeholder="123 Main St, City, Country"
               bg="whiteAlpha.100"
               borderColor="whiteAlpha.300"
@@ -213,7 +217,7 @@ const UserForm: React.FC<UserFormProps> = ({ onSuccess }) => {
 
           <HStack spacing={4} justify="flex-end" pt={4}>
             <Button
-              variant="glass"
+              variant="danger"
               onClick={handleReset}
               isDisabled={isSubmitting}
             >
@@ -221,7 +225,7 @@ const UserForm: React.FC<UserFormProps> = ({ onSuccess }) => {
             </Button>
             <Button
               type="submit"
-              variant="gradient"
+              variant="primary"
               isLoading={isSubmitting}
               loadingText="Saving"
               isDisabled={!isDirty}

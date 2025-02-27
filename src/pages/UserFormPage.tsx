@@ -19,12 +19,12 @@ const UserFormPage: React.FC = () => {
   };
 
   return (
-    <Container maxW="container.md" py={8}>
-      <h1  >
+    <Container maxW="container.md" py={68}>
+      <h1  style={{textAlign: 'center', marginBottom: '20px'}}>
         User Profile
       </h1>
       <Card 
-        variant="glass" 
+        variant="glass"
         title="User Information" 
         subtitle="Manage your personal details"
         animate

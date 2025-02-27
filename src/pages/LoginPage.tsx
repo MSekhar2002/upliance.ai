@@ -430,7 +430,7 @@ const LoginPage: React.FC = () => {
             <FcGoogle />
             Google
           </SocialButton>
-          <SocialButton>
+          <SocialButton onClick={handleGoogleLogin}>
             <FiGithub />
             GitHub
           </SocialButton>
