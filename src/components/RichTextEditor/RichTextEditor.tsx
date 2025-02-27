@@ -81,20 +81,37 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({ value, onChange }) => {
     config: { tension: 280, friction: 20 }
   });
   
-  useEffect(() => {
-    
-    onChange(content);
-    setIsEmpty(content === '');
-  }, [content, onChange]);
+  // Handle changes from the editable div
+  const handleEditorChange = (e: React.FormEvent<HTMLDivElement>) => {
+    const newContent = (e.target as HTMLDivElement).innerHTML;
+    setContent(newContent);
+    setIsEmpty(newContent === '');
+    onChange(newContent);
+  };
   
+  // Sync our local content with the parent component's value
+  useEffect(() => {
+    setContent(value);
+    setIsEmpty(!value);
+    
+    // Update the editable div's content when the value prop changes
+    if (editorRef.current && editorRef.current.innerHTML !== value) {
+      editorRef.current.innerHTML = value;
+    }
+  }, [value]);
+  
+  // Load saved content from localStorage on initial mount
   useEffect(() => {
     const savedContent = localStorage.getItem('richTextContent');
-    if (savedContent) {
+    if (savedContent && !value) {  // Only use localStorage if no value is provided
       setContent(savedContent);
       setIsEmpty(savedContent === '');
       onChange(savedContent);
     }
-
+  }, []);
+  
+  // Set user profile content when a user is selected
+  useEffect(() => {
     if (currentUser) {
       const userContent = `
         <h1>User Profile</h1>
@@ -111,16 +128,9 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({ value, onChange }) => {
     }
   }, [currentUser, onChange]);
   
-  useEffect(() => {
-    if (editorRef.current && editorRef.current.innerHTML !== content) {
-      editorRef.current.innerHTML = content;
-    }
-  }, [content]);
-  
   const executeCommand = (command: EditorCommand) => {
     if (!editorRef.current) return;
     
-
     editorRef.current.focus();
     
     document.execCommand(command.command, false, command.value);
@@ -136,18 +146,6 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({ value, onChange }) => {
     
     if (selectedUser) {
       setCurrentUser(selectedUser);
-      const userContent = `
-        <h1>User Profile</h1>
-        <p><strong>Name:</strong> ${selectedUser.name}</p>
-        <p><strong>Email:</strong> ${selectedUser.email}</p>
-        <p><strong>Phone:</strong> ${selectedUser.phone}</p>
-        <p><strong>Address:</strong> ${selectedUser.address}</p>
-        <p><strong>ID:</strong> ${selectedUser.id}</p>
-        <p><strong>Created:</strong> ${new Date(selectedUser.createdAt).toLocaleString()}</p>
-      `;
-      setContent(userContent);
-      setIsEmpty(false);
-      onChange(userContent);
     }
   };
   
@@ -161,13 +159,6 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({ value, onChange }) => {
       duration: 3000,
       isClosable: true,
     });
-  };
-  
-  const handleEditorChange = (e: React.FormEvent<HTMLDivElement>) => {
-    const newContent = (e.target as HTMLDivElement).innerHTML;
-    setContent(newContent);
-    setIsEmpty(newContent === '');
-    onChange(newContent);
   };
   
   return (
