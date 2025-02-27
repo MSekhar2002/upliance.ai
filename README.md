@@ -207,6 +207,6 @@ The rich text editor visualizes user data and provides formatting options. It sy
 The dashboard uses React charts to visualize user data and counter statistics. It provides an at-a-glance view of the application's state and user profiles.
 
 
-#### Maddili Muni Sekhar
+## Maddili Muni Sekhar
 ### munisekhar654@gmail.com
 ### +916304022592
