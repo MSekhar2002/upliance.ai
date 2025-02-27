@@ -134,7 +134,7 @@ const DashboardPage: React.FC = () => {
   const [users, setUsers] = useState<UserData[]>([]);
 
   useEffect(() => {
-    document.title = 'React App - Dashboard';
+    document.title = 'Upliance.ai Assignment - Dashboard';
     
     // Load users from local storage
     const storedUsers = localStorage.getItem('users');

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import {
   VStack,
   FormControl,
@@ -13,7 +13,7 @@ import {
 } from '@chakra-ui/react';
 import { useForm } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
-import { addUser, updateUser, UserData } from '../../store/userSlice';
+import { addUser, updateUser } from '../../store/userSlice';
 import { RootState } from '../../store/store';
 import useUnsavedChanges from '../../hooks/useUnsavedChanges';
 import UnsavedChangesModal from '../UI/UnsavedChangesModal';
@@ -40,7 +40,6 @@ const UserForm: React.FC<UserFormProps> = ({ onSuccess }) => {
     handleSubmit,
     reset,
     formState: { errors, isDirty, isSubmitting },
-    getValues,
     setValue,
   } = useForm<FormInputs>({
     defaultValues: {
@@ -219,16 +218,14 @@ const UserForm: React.FC<UserFormProps> = ({ onSuccess }) => {
             <Button
               variant="danger"
               onClick={handleReset}
-              isDisabled={isSubmitting}
+              disabled={isSubmitting}
             >
               Reset
             </Button>
             <Button
               type="submit"
               variant="primary"
-              isLoading={isSubmitting}
-              loadingText="Saving"
-              isDisabled={!isDirty}
+              disabled={!isDirty}
             >
               {currentUser ? 'Update Profile' : 'Save Profile'}
             </Button>

@@ -150,7 +150,6 @@ const Button: React.FC<ButtonProps> = ({
 }) => {
   return (
     <StyledButton
-      as={motion.button}
       variant={variant}
       size={size}
       disabled={disabled}

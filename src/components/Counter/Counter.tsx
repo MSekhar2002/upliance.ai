@@ -31,6 +31,7 @@ const Counter: React.FC = () => {
   useEffect(() => {
     localStorage.setItem('counter', count.toString());
     console.log('Count updated:', count);
+    console.log('maxHeight:', maxHeight);
   }, [count]);
 
   const increment = () => setCount(prev => prev + 1);

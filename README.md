@@ -1,4 +1,4 @@
-# React Application Project
+# Upliance.ai Assignment
 
 ## Project Overview
 This project is a React-based web application with three main components:

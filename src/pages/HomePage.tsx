@@ -28,7 +28,8 @@ const HeroSection = styled.div`
   margin-bottom: 60px;
 `;
 
-const GradientTitle = styled(motion.h1)`
+// Keep as regular h1 (not motion.h1)
+const GradientTitle = styled.h1`
   font-size: 3.5rem;
   font-weight: 800;
   margin-bottom: 16px;
@@ -60,6 +61,7 @@ const FeaturesGrid = styled.div`
   }
 `;
 
+// Keep as regular Card (not motion)
 const FeatureCard = styled(Card)`
   height: 100%;
 `;
@@ -120,12 +122,14 @@ const HomePage: React.FC = () => {
   return (
     <PageContainer>
       <HeroSection>
-        <GradientTitle
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2 }}
-        >
-          React App Assignment
+        <GradientTitle>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2 }}
+          >
+            React App Assignment
+          </motion.div>
         </GradientTitle>
         <Subtitle>
           A modern React application with counter, user data form, and rich text
@@ -139,82 +143,82 @@ const HomePage: React.FC = () => {
       </HeroSection>
 
       <FeaturesGrid>
-        <FeatureCard
-          variant="glass"
-          as={motion.div}
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.3 }}
-        >
-          <FeatureIcon>
-            <FiUser />
-          </FeatureIcon>
-          <FeatureTitle>User Form</FeatureTitle>
-          <FeatureDescription>
-            Create and manage user profiles with our intuitive form. Data is
-            stored locally and protected against accidental closing.
-          </FeatureDescription>
-          <Link to="/form">
-          <Button
-            variant="secondary"
-            icon={<FiArrowRight />}
-            fullWidth
+        <FeatureCard variant="glass">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.3 }}
           >
-            Go to Form
-          </Button>
-          </Link>
+            <FeatureIcon>
+              <FiUser />
+            </FeatureIcon>
+            <FeatureTitle>User Form</FeatureTitle>
+            <FeatureDescription>
+              Create and manage user profiles with our intuitive form. Data is
+              stored locally and protected against accidental closing for easy access.
+            </FeatureDescription>
+            <Link to="/form">
+              <Button
+                variant="secondary"
+                icon={<FiArrowRight />}
+                fullWidth
+              >
+                Go to Form
+              </Button>
+            </Link>
+          </motion.div>
         </FeatureCard>
 
-        <FeatureCard
-          variant="glass"
-          as={motion.div}
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.4 }}
-        >
-          <FeatureIcon>
-            <FiEdit />
-          </FeatureIcon>
-          <FeatureTitle>Rich Text Editor</FeatureTitle>
-          <FeatureDescription>
-            Format and style your text with our powerful rich text editor.
-            Includes bold, italic, underline, and list formatting options.
-          </FeatureDescription>
-          <Link to="/editor">
-          <Button
-            variant="secondary"
-            icon={<FiArrowRight />}
-            fullWidth
+        <FeatureCard variant="glass">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.4 }}
           >
-            Try Editor
-          </Button>
-          </Link>
+            <FeatureIcon>
+              <FiEdit />
+            </FeatureIcon>
+            <FeatureTitle>Rich Text Editor</FeatureTitle>
+            <FeatureDescription>
+              Format and style your text with our powerful rich text editor.
+              Includes bold, italic, underline, and list formatting options.
+            </FeatureDescription>
+            <Link to="/editor">
+              <Button
+                variant="secondary"
+                icon={<FiArrowRight />}
+                fullWidth
+              >
+                Try Editor
+              </Button>
+            </Link>
+          </motion.div>
         </FeatureCard>
 
-        <FeatureCard
-          variant="glass"
-          as={motion.div}
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.5 }}
-        >
-          <FeatureIcon>
-            <FiPieChart />
-          </FeatureIcon>
-          <FeatureTitle>Data Visualization</FeatureTitle>
-          <FeatureDescription>
-            View your data with beautiful charts and visualizations. The
-            dashboard provides insights on user profiles and counter usage.
-          </FeatureDescription>
-          <Link to="/dashboard"><Button
-            variant="secondary"
-            icon={<FiArrowRight />}
-            fullWidth
+        <FeatureCard variant="glass">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.5 }}
           >
-            View Dashboard
-          </Button>
-          </Link>
-          
+            <FeatureIcon>
+              <FiPieChart />
+            </FeatureIcon>
+            <FeatureTitle>Data Visualization</FeatureTitle>
+            <FeatureDescription>
+              View your data with beautiful charts and visualizations. The
+              dashboard provides insights on user profiles and counter usage.
+            </FeatureDescription>
+            <Link to="/dashboard">
+              <Button
+                variant="secondary"
+                icon={<FiArrowRight />}
+                fullWidth
+              >
+                View Dashboard
+              </Button>
+            </Link>
+          </motion.div>
         </FeatureCard>
       </FeaturesGrid>
 
