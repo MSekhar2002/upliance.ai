@@ -6,6 +6,7 @@ interface AuthContextType {
   user: { email: string; name: string } | null;
   login: (email: string, password: string) => Promise<boolean>;
   logout: () => void;
+  signup?: (email: string, password: string) => void; 
   googleSignIn: () => Promise<boolean>;
 }
 

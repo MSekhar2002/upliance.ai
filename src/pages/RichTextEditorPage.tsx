@@ -178,10 +178,10 @@ const RichTextEditorPage: React.FC = () => {
                 <UserEmail>{user.email}</UserEmail>
                 <UserPhone>{user.phone}</UserPhone>
                 <UserActions>
-                  <Button size="sm" variant="outline">
+                  <Button size="sm" variant="secondary">
                     View Profile
                   </Button>
-                  <Button size="sm" variant="outline">
+                  <Button size="sm" variant="secondary">
                     Send Message
                   </Button>
                 </UserActions>
