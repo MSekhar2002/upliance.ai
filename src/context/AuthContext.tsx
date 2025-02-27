@@ -1,4 +1,3 @@
-//src/context/AuthContext.tsx
 import React, { createContext, useState, useEffect, useContext } from 'react';
 
 interface AuthContextType {
@@ -6,7 +5,7 @@ interface AuthContextType {
   user: { email: string; name: string } | null;
   login: (email: string, password: string) => Promise<boolean>;
   logout: () => void;
-  signup?: (email: string, password: string) => void; 
+  signup: (email: string, password: string) => Promise<boolean>; 
   googleSignIn: () => Promise<boolean>;
 }
 
@@ -15,6 +14,7 @@ const AuthContext = createContext<AuthContextType>({
   user: null,
   login: async () => false,
   logout: () => {},
+  signup: async () => false, // Default signup function
   googleSignIn: async () => false,
 });
 
@@ -53,6 +53,26 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   };
 
+  const signup = async (email: string, password: string): Promise<boolean> => {
+    // Mock user registration - in a real app, you would call an API
+    try {
+      // Simulate API call
+      await new Promise(resolve => setTimeout(resolve, 800));
+      
+      if (email && password.length >= 6) {
+        const userData = { email, name: email.split('@')[0] };
+        setUser(userData);
+        setIsAuthenticated(true);
+        localStorage.setItem('authUser', JSON.stringify(userData));
+        return true;
+      }
+      return false;
+    } catch (error) {
+      console.error('Signup error:', error);
+      return false;
+    }
+  };
+
   const googleSignIn = async (): Promise<boolean> => {
     try {
       // Simulate Google Sign In
@@ -80,7 +100,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   return (
-    <AuthContext.Provider value={{ isAuthenticated, user, login, logout, googleSignIn }}>
+    <AuthContext.Provider value={{ isAuthenticated, user, login, logout, signup, googleSignIn }}>
       {children}
     </AuthContext.Provider>
   );

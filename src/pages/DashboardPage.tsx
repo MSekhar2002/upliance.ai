@@ -17,7 +17,6 @@ import {
   YAxis, 
   CartesianGrid, 
   Tooltip, 
-  Legend, 
   Cell 
 } from 'recharts';
 
@@ -105,13 +104,6 @@ const ChartCard = styled(Card)`
   }
 `;
 
-const ChartTitle = styled.h3`
-  margin: 0 0 20px;
-  font-size: 1.2rem;
-  font-weight: 600;
-  color: #fff;
-`;
-
 const ChartContainer = styled.div`
   height: 300px;
   width: 100%;
@@ -128,10 +120,19 @@ const IconBox = styled.div`
   font-size: 24px;
 `;
 
+export interface UserData {
+  id: string;
+  name: string;
+  email: string;
+  phone: string;
+  address: string;
+  createdAt: string;
+}
+
 const DashboardPage: React.FC = () => {
   const { count } = useCounter();
-  const [users, setUsers] = useState<any[]>([]);
-  
+  const [users, setUsers] = useState<UserData[]>([]);
+
   useEffect(() => {
     document.title = 'React App - Dashboard';
     
@@ -198,217 +199,225 @@ const DashboardPage: React.FC = () => {
       </PageHeader>
 
       <Stats>
-        <StatCard
-          as={motion.div}
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.3 }}
-          variant="glass"
-        >
-          <IconBox style={{ color: '#4318FF', background: 'rgba(67, 24, 255, 0.1)' }}>
-            <FiUser />
-          </IconBox>
-          <StatLabel>Total Users</StatLabel>
-          <StatValue>{users.length || 42}</StatValue>
+        <StatCard variant="glass">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.3 }}
+          >
+            <IconBox style={{ color: '#4318FF', background: 'rgba(67, 24, 255, 0.1)' }}>
+              <FiUser />
+            </IconBox>
+            <StatLabel>Total Users</StatLabel>
+            <StatValue>{users.length || 42}</StatValue>
+          </motion.div>
         </StatCard>
 
-        <StatCard
-          as={motion.div}
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.4 }}
-          variant="glass"
-        >
-          <IconBox style={{ color: '#05CD99', background: 'rgba(5, 205, 153, 0.1)' }}>
-            <FiActivity />
-          </IconBox>
-          <StatLabel>Current Count</StatLabel>
-          <StatValue>{count || 10}</StatValue>
+        <StatCard variant="glass">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.4 }}
+          >
+            <IconBox style={{ color: '#05CD99', background: 'rgba(5, 205, 153, 0.1)' }}>
+              <FiActivity />
+            </IconBox>
+            <StatLabel>Current Count</StatLabel>
+            <StatValue>{count || 10}</StatValue>
+          </motion.div>
         </StatCard>
 
-        <StatCard
-          as={motion.div}
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.5 }}
-          variant="glass"
-        >
-          <IconBox style={{ color: '#FFB547', background: 'rgba(255, 181, 71, 0.1)' }}>
-            <FiTrendingUp />
-          </IconBox>
-          <StatLabel>Active Sessions</StatLabel>
-          <StatValue>24</StatValue>
+        <StatCard variant="glass">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.5 }}
+          >
+            <IconBox style={{ color: '#FFB547', background: 'rgba(255, 181, 71, 0.1)' }}>
+              <FiTrendingUp />
+            </IconBox>
+            <StatLabel>Active Sessions</StatLabel>
+            <StatValue>24</StatValue>
+          </motion.div>
         </StatCard>
 
-        <StatCard
-          as={motion.div}
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.6 }}
-          variant="glass"
-        >
-          <IconBox style={{ color: '#FF5858', background: 'rgba(255, 88, 88, 0.1)' }}>
-            <FiPieChart />
-          </IconBox>
-          <StatLabel>Data Points</StatLabel>
-          <StatValue>1,247</StatValue>
+        <StatCard variant="glass">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.6 }}
+          >
+            <IconBox style={{ color: '#FF5858', background: 'rgba(255, 88, 88, 0.1)' }}>
+              <FiPieChart />
+            </IconBox>
+            <StatLabel>Data Points</StatLabel>
+            <StatValue>1,247</StatValue>
+          </motion.div>
         </StatCard>
       </Stats>
 
       <ChartGrid>
         <ChartCard 
-          as={motion.div}
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.7 }}
           variant="elevated"
           title="Counter Activity"
           subtitle="Last 7 days"
         >
-          <ChartContainer>
-            <ResponsiveContainer width="100%" height="100%">
-              <AreaChart data={counterHistory}>
-                <defs>
-                  <linearGradient id="colorCount" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#4318FF" stopOpacity={0.8} />
-                    <stop offset="95%" stopColor="#4318FF" stopOpacity={0} />
-                  </linearGradient>
-                </defs>
-                <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.1)" />
-                <XAxis dataKey="name" stroke="#a3aed0" />
-                <YAxis stroke="#a3aed0" />
-                <Tooltip 
-                  contentStyle={{ 
-                    background: 'rgba(23, 25, 35, 0.9)',
-                    border: '1px solid rgba(255, 255, 255, 0.1)',
-                    borderRadius: '10px',
-                    color: '#fff',
-                  }} 
-                />
-                <Area 
-                  type="monotone" 
-                  dataKey="count" 
-                  stroke="#4318FF" 
-                  fillOpacity={1} 
-                  fill="url(#colorCount)" 
-                />
-              </AreaChart>
-            </ResponsiveContainer>
-          </ChartContainer>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.7 }}
+          >
+            <ChartContainer>
+              <ResponsiveContainer width="100%" height="100%">
+                <AreaChart data={counterHistory}>
+                  <defs>
+                    <linearGradient id="colorCount" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="5%" stopColor="#4318FF" stopOpacity={0.8} />
+                      <stop offset="95%" stopColor="#4318FF" stopOpacity={0} />
+                    </linearGradient>
+                  </defs>
+                  <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.1)" />
+                  <XAxis dataKey="name" stroke="#a3aed0" />
+                  <YAxis stroke="#a3aed0" />
+                  <Tooltip 
+                    contentStyle={{ 
+                      background: 'rgba(23, 25, 35, 0.9)',
+                      border: '1px solid rgba(255, 255, 255, 0.1)',
+                      borderRadius: '10px',
+                      color: '#fff',
+                    }} 
+                  />
+                  <Area 
+                    type="monotone" 
+                    dataKey="count" 
+                    stroke="#4318FF" 
+                    fillOpacity={1} 
+                    fill="url(#colorCount)" 
+                  />
+                </AreaChart>
+              </ResponsiveContainer>
+            </ChartContainer>
+          </motion.div>
         </ChartCard>
 
         <ChartCard 
-          as={motion.div}
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.8 }}
           variant="elevated"
           title="User Growth"
           subtitle="Monthly trends"
         >
-          <ChartContainer>
-            <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={userActivity}>
-                <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.1)" />
-                <XAxis dataKey="name" stroke="#a3aed0" />
-                <YAxis stroke="#a3aed0" />
-                <Tooltip 
-                  contentStyle={{ 
-                    background: 'rgba(23, 25, 35, 0.9)',
-                    border: '1px solid rgba(255, 255, 255, 0.1)',
-                    borderRadius: '10px',
-                    color: '#fff',
-                  }} 
-                />
-                <Bar dataKey="users" fill="#6AD2FF" radius={[5, 5, 0, 0]} />
-              </BarChart>
-            </ResponsiveContainer>
-          </ChartContainer>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.8 }}
+          >
+            <ChartContainer>
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart data={userActivity}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.1)" />
+                  <XAxis dataKey="name" stroke="#a3aed0" />
+                  <YAxis stroke="#a3aed0" />
+                  <Tooltip 
+                    contentStyle={{ 
+                      background: 'rgba(23, 25, 35, 0.9)',
+                      border: '1px solid rgba(255, 255, 255, 0.1)',
+                      borderRadius: '10px',
+                      color: '#fff',
+                    }} 
+                  />
+                  <Bar dataKey="users" fill="#6AD2FF" radius={[5, 5, 0, 0]} />
+                </BarChart>
+              </ResponsiveContainer>
+            </ChartContainer>
+          </motion.div>
         </ChartCard>
 
         <ChartCard 
-          as={motion.div}
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.9 }}
           variant="elevated"
           title="User Location"
           subtitle="Geographic distribution"
         >
-          <ChartContainer>
-            <ResponsiveContainer width="100%" height="100%">
-              <PieChart>
-                <Pie
-                  data={userLocations}
-                  cx="50%"
-                  cy="50%"
-                  labelLine={false}
-                  outerRadius={100}
-                  fill="#8884d8"
-                  dataKey="value"
-                  label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
-                >
-                  {userLocations.map((_, index) => (
-                    <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                  ))}
-                </Pie>
-                <Tooltip 
-                  contentStyle={{ 
-                    background: 'rgba(23, 25, 35, 0.9)',
-                    border: '1px solid rgba(255, 255, 255, 0.1)',
-                    borderRadius: '10px',
-                    color: '#fff',
-                  }} 
-                />
-              </PieChart>
-            </ResponsiveContainer>
-          </ChartContainer>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.9 }}
+          >
+            <ChartContainer>
+              <ResponsiveContainer width="100%" height="100%">
+                <PieChart>
+                  <Pie
+                    data={userLocations}
+                    cx="50%"
+                    cy="50%"
+                    labelLine={false}
+                    outerRadius={100}
+                    fill="#8884d8"
+                    dataKey="value"
+                    label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
+                  >
+                    {userLocations.map((_, index) => (
+                      <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                    ))}
+                  </Pie>
+                  <Tooltip 
+                    contentStyle={{ 
+                      background: 'rgba(23, 25, 35, 0.9)',
+                      border: '1px solid rgba(255, 255, 255, 0.1)',
+                      borderRadius: '10px',
+                      color: '#fff',
+                    }} 
+                  />
+                </PieChart>
+              </ResponsiveContainer>
+            </ChartContainer>
+          </motion.div>
         </ChartCard>
 
         <ChartCard 
-          as={motion.div}
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 1.0 }}
           variant="elevated"
           title="Platform Usage"
           subtitle="Device breakdown"
         >
-          <ChartContainer>
-            <ResponsiveContainer width="100%" height="100%">
-              <LineChart data={platformData}>
-                <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.1)" />
-                <XAxis dataKey="name" stroke="#a3aed0" />
-                <YAxis stroke="#a3aed0" />
-                <Tooltip 
-                  contentStyle={{ 
-                    background: 'rgba(23, 25, 35, 0.9)',
-                    border: '1px solid rgba(255, 255, 255, 0.1)',
-                    borderRadius: '10px',
-                    color: '#fff',
-                  }} 
-                />
-                <Line 
-                  type="monotone" 
-                  dataKey="users" 
-                  stroke="#9979E6" 
-                  strokeWidth={3}
-                  dot={{ 
-                    fill: '#9979E6', 
-                    strokeWidth: 2, 
-                    r: 6, 
-                    strokeDasharray: '' 
-                  }}
-                  activeDot={{ 
-                    fill: '#9979E6', 
-                    stroke: 'white', 
-                    strokeWidth: 2, 
-                    r: 8 
-                  }}
-                />
-              </LineChart>
-            </ResponsiveContainer>
-          </ChartContainer>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 1.0 }}
+          >
+            <ChartContainer>
+              <ResponsiveContainer width="100%" height="100%">
+                <LineChart data={platformData}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.1)" />
+                  <XAxis dataKey="name" stroke="#a3aed0" />
+                  <YAxis stroke="#a3aed0" />
+                  <Tooltip 
+                    contentStyle={{ 
+                      background: 'rgba(23, 25, 35, 0.9)',
+                      border: '1px solid rgba(255, 255, 255, 0.1)',
+                      borderRadius: '10px',
+                      color: '#fff',
+                    }} 
+                  />
+                  <Line 
+                    type="monotone" 
+                    dataKey="users" 
+                    stroke="#9979E6" 
+                    strokeWidth={3}
+                    dot={{ 
+                      fill: '#9979E6', 
+                      strokeWidth: 2, 
+                      r: 6, 
+                      strokeDasharray: '' 
+                    }}
+                    activeDot={{ 
+                      fill: '#9979E6', 
+                      stroke: 'white', 
+                      strokeWidth: 2, 
+                      r: 8 
+                    }}
+                  />
+                </LineChart>
+              </ResponsiveContainer>
+            </ChartContainer>
+          </motion.div>
         </ChartCard>
       </ChartGrid>
     </PageContainer>

@@ -288,7 +288,7 @@ const LoginPage: React.FC = () => {
         await login(email, password);
         navigate('/dashboard');
       } else {
-        await signup(name, email, password);
+        await signup(email, password);
         navigate('/dashboard');
       }
     } catch (error) {
@@ -315,142 +315,140 @@ const LoginPage: React.FC = () => {
   
   return (
     <PageContainer>
-      <LoginCard
-        variant="elevated"
-        as={motion.div}
-        initial={{ opacity: 0, y: 20 }}
+  <LoginCard variant="elevated">
+      <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
+    <LogoSection>
+      <Logo>ReactApp</Logo>
+      <LogoSubtext>
+        {activeTab === 'login' 
+          ? 'Sign in to access your account' 
+          : 'Create an account to get started'}
+      </LogoSubtext>
+    </LogoSection>
+    
+    <TabsContainer>
+      <Tab 
+        active={activeTab === 'login'} 
+        onClick={() => setActiveTab('login')}
+      >
+        Sign In
+      </Tab>
+      <Tab 
+        active={activeTab === 'signup'} 
+        onClick={() => setActiveTab('signup')}
+      >
+        Sign Up
+      </Tab>
+    </TabsContainer>
+    
+    {error && (
+      <ErrorMessage
+        initial={{ opacity: 0, y: -10 }}
         animate={{ opacity: 1, y: 0 }}
       >
-        <LogoSection>
-          <Logo>ReactApp</Logo>
-          <LogoSubtext>
-            {activeTab === 'login' 
-              ? 'Sign in to access your account' 
-              : 'Create an account to get started'}
-          </LogoSubtext>
-        </LogoSection>
-        
-        <TabsContainer>
-          <Tab 
-            active={activeTab === 'login'} 
-            onClick={() => setActiveTab('login')}
-          >
-            Sign In
-          </Tab>
-          <Tab 
-            active={activeTab === 'signup'} 
-            onClick={() => setActiveTab('signup')}
-          >
-            Sign Up
-          </Tab>
-        </TabsContainer>
-        
-        {error && (
-          <ErrorMessage
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-          >
-            {error}
-          </ErrorMessage>
-        )}
-        
-        <Form onSubmit={handleSubmit}>
-          {activeTab === 'signup' && (
-            <InputGroup>
-              <InputIcon>
-                <FiUser />
-              </InputIcon>
-              <Input 
-                type="text" 
-                placeholder="Full Name" 
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-              />
-            </InputGroup>
-          )}
-          
-          <InputGroup>
-            <InputIcon>
-              <FiMail />
-            </InputIcon>
-            <Input 
-              type="email" 
-              placeholder="Email Address" 
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-            />
-          </InputGroup>
-          
-          <InputGroup>
-            <InputIcon>
-              <FiLock />
-            </InputIcon>
-            <Input 
-              type={showPassword ? 'text' : 'password'} 
-              placeholder="Password" 
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-            />
-            <PasswordVisibilityToggle
-              type="button"
-              onClick={() => setShowPassword(!showPassword)}
-            >
-              {showPassword ? <FiEyeOff /> : <FiEye />}
-            </PasswordVisibilityToggle>
-          </InputGroup>
-          
-          {activeTab === 'login' && (
-            <RememberForgotRow>
-              <CheckboxLabel>
-                <input type="checkbox" />
-                Remember me
-              </CheckboxLabel>
-              <ForgotPasswordLink href="#">Forgot Password?</ForgotPasswordLink>
-            </RememberForgotRow>
-          )}
-          
-          <Button 
-            type="submit" 
-            fullWidth 
-            disabled={loading}
-          >
-            {loading 
-              ? 'Loading...' 
-              : activeTab === 'login' 
-                ? 'Sign In' 
-                : 'Create Account'
-            }
-          </Button>
-        </Form>
-        
-        <OrDivider>or continue with</OrDivider>
-        
-        <SocialButtonsContainer>
-          <SocialButton onClick={handleGoogleLogin}>
-            <FcGoogle />
-            Google
-          </SocialButton>
-          <SocialButton onClick={handleGoogleLogin}>
-            <FiGithub />
-            GitHub
-          </SocialButton>
-        </SocialButtonsContainer>
-        
-        <SignupPrompt>
-          {activeTab === 'login' 
-            ? "Don't have an account? " 
-            : "Already have an account? "}
-          <a 
-            href="#" 
-            onClick={(e) => {
-              e.preventDefault();
-              setActiveTab(activeTab === 'login' ? 'signup' : 'login');
-            }}
-          >
-            {activeTab === 'login' ? 'Sign Up' : 'Sign In'}
-          </a>
-        </SignupPrompt>
-      </LoginCard>
+        {error}
+      </ErrorMessage>
+    )}
+    
+    <Form onSubmit={handleSubmit}>
+      {activeTab === 'signup' && (
+        <InputGroup>
+          <InputIcon>
+            <FiUser />
+          </InputIcon>
+          <Input 
+            type="text" 
+            placeholder="Full Name" 
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+          />
+        </InputGroup>
+      )}
+      
+      <InputGroup>
+        <InputIcon>
+          <FiMail />
+        </InputIcon>
+        <Input 
+          type="email" 
+          placeholder="Email Address" 
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+        />
+      </InputGroup>
+      
+      <InputGroup>
+        <InputIcon>
+          <FiLock />
+        </InputIcon>
+        <Input 
+          type={showPassword ? 'text' : 'password'} 
+          placeholder="Password" 
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+        />
+        <PasswordVisibilityToggle
+          type="button"
+          onClick={() => setShowPassword(!showPassword)}
+        >
+          {showPassword ? <FiEyeOff /> : <FiEye />}
+        </PasswordVisibilityToggle>
+      </InputGroup>
+      
+      {activeTab === 'login' && (
+        <RememberForgotRow>
+          <CheckboxLabel>
+            <input type="checkbox" />
+            Remember me
+          </CheckboxLabel>
+          <ForgotPasswordLink href="#">Forgot Password?</ForgotPasswordLink>
+        </RememberForgotRow>
+      )}
+      
+      <Button 
+        type="submit" 
+        fullWidth 
+        disabled={loading}
+      >
+        {loading 
+          ? 'Loading...' 
+          : activeTab === 'login' 
+            ? 'Sign In' 
+            : 'Create Account'
+        }
+      </Button>
+    </Form>
+    
+    <OrDivider>or continue with</OrDivider>
+    
+    <SocialButtonsContainer>
+      <SocialButton onClick={handleGoogleLogin}>
+        <FcGoogle />
+        Google
+      </SocialButton>
+      <SocialButton onClick={handleGoogleLogin}>
+        <FiGithub />
+        GitHub
+      </SocialButton>
+    </SocialButtonsContainer>
+    
+    <SignupPrompt>
+      {activeTab === 'login' 
+        ? "Don't have an account? " 
+        : "Already have an account? "}
+      <a 
+        href="#" 
+        onClick={(e) => {
+          e.preventDefault();
+          setActiveTab(activeTab === 'login' ? 'signup' : 'login');
+        }}
+      >
+        {activeTab === 'login' ? 'Sign Up' : 'Sign In'}
+      </a>
+    </SignupPrompt>
+</motion.div>
+  </LoginCard>
+
     </PageContainer>
   );
 };
