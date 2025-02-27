@@ -116,7 +116,7 @@ const CounterSectionTitle = styled.h2`
 
 const HomePage: React.FC = () => {
   useEffect(() => {
-    document.title = "React App - Home";
+    document.title = "Uplaince.ai - Home";
   }, []);
 
   return (
@@ -128,7 +128,7 @@ const HomePage: React.FC = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
           >
-            React App Assignment
+            Uplaince.ai Assignment
           </motion.div>
         </GradientTitle>
         <Subtitle>

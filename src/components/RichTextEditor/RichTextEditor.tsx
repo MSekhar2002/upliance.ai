@@ -80,6 +80,18 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({ value, onChange }) => {
     to: { opacity: 1, transform: 'translateY(0)' },
     config: { tension: 280, friction: 20 }
   });
+
+  useEffect(() => {
+    const storedUsers = localStorage.getItem("users");
+    if (storedUsers) {
+      try {
+        setUsers(JSON.parse(storedUsers)); 
+      } catch (error) {
+        console.error("Error parsing user data:", error);
+      }
+    }
+  }, []); 
+  
   
   // Handle changes from the editable div
   const handleEditorChange = (e: React.FormEvent<HTMLDivElement>) => {
